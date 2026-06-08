@@ -1,0 +1,18 @@
+parameters:
+    level: max
+    # Analyse against a fixed PHP version so results do not depend on the
+    # contributor's local runtime. 8.1+ is required for the `FTP\Connection`
+    # object the ftp_*() functions return; the library itself runs on 8.0+.
+    phpVersion: 80200
+    paths:
+        - src
+        - tests
+    tmpDir: build/phpstan
+    treatPhpDocTypesAsCertain: false
+    bootstrapFiles:
+        # Declares minimal `Aws\S3\S3Client` / `Aws\Result` stubs so the
+        # optional S3 adapter can be analysed without pulling in the real SDK.
+        - tests/Stubs/aws-sdk.php
+    excludePaths:
+        # The stub only exists to provide symbols; it is not production code.
+        - tests/Stubs/aws-sdk.php

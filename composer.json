@@ -1,13 +1,18 @@
 {
     "name": "initphp/upload",
-    "description": "InitPHP Upload Library",
+    "description": "Validate and store uploaded files on local disk, FTP/FTPS or Amazon S3 through a single adapter-based API.",
     "type": "library",
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "InitPHP\\Upload\\": "src/"
-        }
-    },
+    "keywords": [
+        "upload",
+        "file-upload",
+        "filesystem",
+        "ftp",
+        "s3",
+        "aws",
+        "adapter",
+        "initphp"
+    ],
     "authors": [
         {
             "name": "Muhammet ŞAFAK",
@@ -16,9 +21,57 @@
             "homepage": "https://www.muhammetsafak.com.tr"
         }
     ],
-    "minimum-stability": "stable",
+    "support": {
+        "issues": "https://github.com/InitPHP/Upload/issues",
+        "source": "https://github.com/InitPHP/Upload",
+        "docs": "https://github.com/InitPHP/Upload/tree/main/docs"
+    },
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "ext-fileinfo": "*"
-    }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6",
+        "phpstan/phpstan": "^1.12 || ^2.1",
+        "friendsofphp/php-cs-fixer": "^3.65"
+    },
+    "suggest": {
+        "ext-ftp": "Required by the FTP adapter (InitPHP\\Upload\\Adapters\\FTPAdapter).",
+        "aws/aws-sdk-php": "Required by the S3 adapter (InitPHP\\Upload\\Adapters\\S3Adapter)."
+    },
+    "autoload": {
+        "psr-4": {
+            "InitPHP\\Upload\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "InitPHP\\Upload\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html build/coverage",
+        "stan": "phpstan analyse --no-progress",
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix",
+        "ci": [
+            "@cs-check",
+            "@stan",
+            "@test"
+        ]
+    },
+    "scripts-descriptions": {
+        "test": "Run the PHPUnit test suite.",
+        "test-coverage": "Run PHPUnit and produce an HTML coverage report under build/coverage.",
+        "stan": "Run PHPStan at the level configured in phpstan.neon.dist.",
+        "cs-check": "Report any PHP-CS-Fixer violations without modifying files.",
+        "cs-fix": "Apply PHP-CS-Fixer fixes in-place.",
+        "ci": "Run the full CI bundle locally: cs-check, stan, test."
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
