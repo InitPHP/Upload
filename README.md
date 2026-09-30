@@ -3,6 +3,7 @@
 Validate and store uploaded files on local disk, FTP/FTPS or Amazon S3 through
 a single, adapter-based API.
 
+[![Designed & Maintained with Tan](https://www.muhammetsafak.com.tr/badges/designed-maintained-with-tan.svg)](https://www.muhammetsafak.com.tr/en/tan/)
 [![CI](https://github.com/InitPHP/Upload/actions/workflows/ci.yml/badge.svg)](https://github.com/InitPHP/Upload/actions/workflows/ci.yml)
 [![Latest Stable Version](http://poser.pugx.org/initphp/upload/v)](https://packagist.org/packages/initphp/upload) [![Total Downloads](http://poser.pugx.org/initphp/upload/downloads)](https://packagist.org/packages/initphp/upload) [![License](http://poser.pugx.org/initphp/upload/license)](https://packagist.org/packages/initphp/upload) [![PHP Version Require](http://poser.pugx.org/initphp/upload/require/php)](https://packagist.org/packages/initphp/upload)
 
