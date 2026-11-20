@@ -5,10 +5,10 @@
  *
  * This file is part of InitPHP Upload.
  *
- * @author     Muhammet ŞAFAK <info@muhammetsafak.com.tr>
+ * @author     Muhammet ŞAFAK <info@muhammetsafak.com>
  * @copyright  Copyright © 2023 InitPHP
  * @license    https://github.com/InitPHP/Upload/blob/main/LICENSE  MIT
- * @link       https://www.muhammetsafak.com.tr
+ * @link       https://muhammetsafak.com
  */
 
 declare(strict_types=1);
