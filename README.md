@@ -58,7 +58,7 @@ foreach (File::setPost('photos') as $file) {
 `File[]`, whether the field uploaded one file or many. `to()` validates the
 file, stores it, and returns the stored `File` (with its public URL set) or
 `false` if the underlying write failed. Any validation or transfer problem is
-thrown as an [`UploadException`](docs/exceptions.md).
+thrown as an [`UploadException`](docs/Error-Handling.md).
 
 ## Loading files
 
@@ -78,9 +78,9 @@ across adapters.
 
 | Adapter | Credentials | Notes |
 | ------- | ----------- | ----- |
-| [`LocalAdapter`](docs/local-adapter.md) | `dir`, `url` | Creates missing destination directories. |
-| [`FTPAdapter`](docs/ftp-adapter.md) | `host`, `port`, `username`, `password`, `timeout`, `url`, `passive`, `ssl` | Binary mode, passive by default, optional FTPS. |
-| [`S3Adapter`](docs/s3-adapter.md) | `key`, `secret_key`, `region`, `bucket`, `ACL`, `version` | Requires `aws/aws-sdk-php`. |
+| [`LocalAdapter`](docs/Local-Adapter.md) | `dir`, `url` | Creates missing destination directories. |
+| [`FTPAdapter`](docs/FTP-Adapter.md) | `host`, `port`, `username`, `password`, `timeout`, `url`, `passive`, `ssl` | Binary mode, passive by default, optional FTPS. |
+| [`S3Adapter`](docs/S3-Adapter.md) | `key`, `secret_key`, `region`, `bucket`, `ACL`, `version` | Requires `aws/aws-sdk-php`. |
 
 ### The `to($target)` argument
 
@@ -116,15 +116,19 @@ $upload->setFile($file)->to();     // stored as profile.jpg
 
 ## Documentation
 
-Full guides with examples live in [`docs/`](docs/README.md):
+Full guides with examples live in [`docs/`](docs/Home.md):
 
-- [Getting started](docs/getting-started.md)
-- [The `File` object](docs/the-file-object.md)
-- [Validation](docs/validation.md)
-- [Local adapter](docs/local-adapter.md)
-- [FTP adapter](docs/ftp-adapter.md)
-- [S3 adapter](docs/s3-adapter.md)
-- [Exceptions](docs/exceptions.md)
+- [Installation](docs/Installation.md) · [Quick Start](docs/Quick-Start.md)
+- [Core Concepts](docs/Core-Concepts.md)
+- [The `File` object](docs/The-File-Object.md)
+- [Validation](docs/Validation.md)
+- [Local adapter](docs/Local-Adapter.md) ·
+  [FTP adapter](docs/FTP-Adapter.md) ·
+  [S3 adapter](docs/S3-Adapter.md)
+- [Error Handling](docs/Error-Handling.md)
+- [Security Best Practices](docs/Security-Best-Practices.md)
+- [API Reference](docs/API-Reference.md) · [Recipes](docs/Recipes.md) · [Testing](docs/Testing.md)
+- [FAQ](docs/FAQ.md) · [Troubleshooting](docs/Troubleshooting.md)
 
 ## Contributing
 
