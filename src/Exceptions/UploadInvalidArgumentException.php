@@ -23,6 +23,4 @@ use InvalidArgumentException;
  * than {@see UploadException}, signalling a misuse of the API rather than a
  * runtime upload failure.
  */
-class UploadInvalidArgumentException extends InvalidArgumentException
-{
-}
+class UploadInvalidArgumentException extends InvalidArgumentException {}

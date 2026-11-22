@@ -128,7 +128,7 @@ class LocalAdapter extends BaseUploadAdapter
         if ($directory === '' || is_dir($directory)) {
             return;
         }
-        if (!mkdir($directory, 0777, true) && !is_dir($directory)) {
+        if (!mkdir($directory, 0o777, true) && !is_dir($directory)) {
             throw new UploadException(\sprintf('The target directory "%s" could not be created.', $directory));
         }
     }

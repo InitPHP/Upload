@@ -85,7 +85,7 @@ final class LocalAdapterTest extends UploadTestCase
 
         $adapter = new LocalAdapter(
             ['dir' => $dir, 'url' => 'https://e.test'],
-            ['allowed_extensions' => ['txt']]
+            ['allowed_extensions' => ['txt']],
         );
 
         $this->expectException(UploadException::class);
