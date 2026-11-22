@@ -90,7 +90,7 @@ final class File
         ?string $name = null,
         ?int $size = null,
         ?string $type = null,
-        int $error = UPLOAD_ERR_OK
+        int $error = UPLOAD_ERR_OK,
     ) {
         $this->path = $path;
         $this->name = $name ?? basename($path);
@@ -165,7 +165,7 @@ final class File
             self::asString($row['name'] ?? ''),
             self::asInt($row['size'] ?? 0),
             self::asString($row['type'] ?? ''),
-            $error
+            $error,
         );
     }
 

@@ -9,7 +9,7 @@ a single, adapter-based API.
 
 ## Requirements
 
-- PHP 8.0 or higher
+- PHP 8.2 or higher
 - `ext-fileinfo` (used to detect the real MIME type of a file)
 - `ext-ftp` — only for the FTP adapter
 - [`aws/aws-sdk-php`](https://packagist.org/packages/aws/aws-sdk-php) — only for the S3 adapter
@@ -129,7 +129,7 @@ Full guides with examples live in [`docs/`](docs/README.md):
 ## Contributing
 
 Bug reports and pull requests are welcome. CI runs PHP-CS-Fixer, PHPStan (max
-level) and PHPUnit across PHP 8.0–8.4; run the same bundle locally with:
+level) and PHPUnit across PHP 8.2–8.5; run the same bundle locally with:
 
 ```bash
 composer ci

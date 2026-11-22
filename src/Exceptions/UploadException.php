@@ -22,6 +22,4 @@ use RuntimeException;
  * every runtime error raised by the package, so a single
  * `catch (UploadException $e)` covers them all.
  */
-class UploadException extends RuntimeException
-{
-}
+class UploadException extends RuntimeException {}

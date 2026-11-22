@@ -24,9 +24,7 @@ final class RecordingS3Client extends S3Client
     /** The `ObjectURL` to report; null simulates a missing URL in the result. */
     public ?string $objectUrl = 'https://example-bucket.s3.amazonaws.com/source.txt';
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * @param array<string, mixed> $args

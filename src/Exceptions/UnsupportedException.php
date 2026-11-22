@@ -20,6 +20,4 @@ namespace InitPHP\Upload\Exceptions;
  * extension (`ext-ftp`) or dependency (`aws/aws-sdk-php`) is missing. Extends
  * {@see UploadException} so it is caught by the same handler.
  */
-class UnsupportedException extends UploadException
-{
-}
+class UnsupportedException extends UploadException {}

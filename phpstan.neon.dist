@@ -2,7 +2,7 @@ parameters:
     level: max
     # Analyse against a fixed PHP version so results do not depend on the
     # contributor's local runtime. 8.1+ is required for the `FTP\Connection`
-    # object the ftp_*() functions return; the library itself runs on 8.0+.
+    # object the ftp_*() functions return; the library itself runs on 8.2+.
     phpVersion: 80200
     paths:
         - src

@@ -19,7 +19,7 @@ final class CredentialsAndOptionsTest extends TestCase
 
         self::assertSame(
             ['allowed_extensions' => [], 'allowed_mime_types' => [], 'allowed_max_size' => 0],
-            $adapter->exposeOptions()
+            $adapter->exposeOptions(),
         );
     }
 
