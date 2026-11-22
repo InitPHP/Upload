@@ -69,7 +69,7 @@ constraint that allows compatible updates:
 ```json
 {
     "require": {
-        "initphp/upload": "^2.0"
+        "initphp/upload": "^3.0"
     }
 }
 ```
