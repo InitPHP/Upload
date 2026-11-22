@@ -6,14 +6,23 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING:** Raised the minimum PHP version to 8.2 (was 8.0;
+  `"php": "^8.2"`). The CI matrix now covers PHP 8.2, 8.3, 8.4 and 8.5.
+- **BREAKING:** The code style moved to PER-CS, enforced by the shared
+  PHP-CS-Fixer configuration (`.php-cs-fixer.dist.php`). The source was
+  reformatted accordingly; there are no behaviour changes.
+
+## [2.0.0]
+
 A correctness- and quality-focused overhaul: real bug fixes, consistent
 `$target` semantics across adapters, a modern PHP 8 codebase, full tests,
 static analysis, CI and documentation.
 
 ### Requirements
 
-- **BREAKING:** Raised the minimum PHP version to 8.2 (was 7.4;
-  `"php": "^8.2"`). The CI matrix now covers PHP 8.2, 8.3, 8.4 and 8.5.
+- **Raised the minimum PHP version to 8.0** (was 7.4).
 
 ### Fixed
 
@@ -43,9 +52,6 @@ static analysis, CI and documentation.
 
 ### Changed
 
-- **BREAKING:** The code style moved to PER-CS, enforced by the shared
-  PHP-CS-Fixer configuration (`.php-cs-fixer.dist.php`). The source was
-  reformatted accordingly; there are no behaviour changes.
 - **S3 `$target` is now the object key prefix, not the bucket name.** Previously
   `to('avatars')` tried to upload to a bucket *named* `avatars`. `$target` now
   means a destination path/key prefix in every adapter; the bucket always comes
