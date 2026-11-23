@@ -45,10 +45,12 @@ $upload = new Upload($adapter);
 
 ```php
 foreach (File::setPost('photos') as $file) {
+    $file->rename(bin2hex(random_bytes(16))); // never use the client's file name as the key
+
     $stored = $upload->setFile($file)->to('avatars');
 
     if ($stored !== false) {
-        echo $stored->getURL(); // the object's public URL
+        echo htmlspecialchars((string) $stored->getURL(), ENT_QUOTES, 'UTF-8'); // the object's public URL
     }
 }
 ```

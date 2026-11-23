@@ -17,11 +17,12 @@ use InitPHP\Upload\Adapters\LocalAdapter;
 
 $adapter = new LocalAdapter(
     [
-        'dir' => __DIR__ . '/uploads/',
-        'url' => 'https://example.com/uploads/',
+        'dir' => '/var/app/storage/uploads/',      // outside the web root
+        'url' => 'https://example.com/uploads/',   // served read-only, scripts never executed
     ],
     [
         'allowed_extensions' => ['jpg', 'png', 'pdf'],
+        'allowed_mime_types' => ['image/jpeg', 'image/png', 'application/pdf'], // real type, via finfo
         'allowed_max_size'   => 5 * 1024 * 1024,
     ]
 );
@@ -29,17 +30,21 @@ $adapter = new LocalAdapter(
 $upload = new Upload($adapter);
 ```
 
-`dir` should usually point **outside the web root** — see
+`dir` should point **outside the web root** — see
 [Security Best Practices](Security-Best-Practices.md#2-keep-uploads-out-of-the-web-root).
 
 ## Storing files
 
 ```php
 foreach (File::setPost('documents') as $file) {
+    // Never store under the client's file name: generate one (the extension is kept).
+    // Two uploads with the same client name would otherwise overwrite each other.
+    $file->rename(bin2hex(random_bytes(16)));
+
     $stored = $upload->setFile($file)->to();
 
     if ($stored !== false) {
-        echo $stored->getURL(); // https://example.com/uploads/<name>
+        echo htmlspecialchars((string) $stored->getURL(), ENT_QUOTES, 'UTF-8'); // https://example.com/uploads/<32hex>.pdf
     }
 }
 ```
