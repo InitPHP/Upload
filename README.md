@@ -36,20 +36,24 @@ use InitPHP\Upload\File;
 use InitPHP\Upload\Adapters\LocalAdapter;
 
 $adapter = new LocalAdapter([
-    'dir' => __DIR__ . '/uploads/',
-    'url' => 'https://example.com/uploads/',
+    'dir' => '/var/app/storage/uploads/',        // outside the web root
+    'url' => 'https://example.com/uploads/',     // served read-only, scripts never executed
 ], [
     'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
+    'allowed_mime_types' => ['image/jpeg', 'image/png', 'image/webp'], // real type, via finfo
     'allowed_max_size'   => 2 * 1024 * 1024, // 2 MB, in bytes
 ]);
 
 $upload = new Upload($adapter);
 
 foreach (File::setPost('photos') as $file) {
+    // Never store under the client's file name: generate one (the extension is kept).
+    $file->rename(bin2hex(random_bytes(16)));
+
     $stored = $upload->setFile($file)->to();
 
     if ($stored !== false) {
-        echo 'Uploaded to: ' . $stored->getURL();
+        echo 'Uploaded to: ' . htmlspecialchars((string) $stored->getURL(), ENT_QUOTES, 'UTF-8');
     }
 }
 ```
@@ -106,6 +110,12 @@ Pass these as the second constructor argument of any adapter (an empty array or
 
 A file that violates any restriction — or whose upload errored — makes `to()`
 throw an `UploadException`.
+
+> **Security:** with no options set, **every** extension and type is accepted, and
+> the file is stored under the name the client sent. Always set
+> `allowed_extensions` and `allowed_mime_types` to an allow-list, `rename()` each
+> file, and keep `dir` outside the web root. See
+> [Security Best Practices](docs/Security-Best-Practices.md).
 
 ## Renaming
 

@@ -21,7 +21,10 @@ use InitPHP\Upload\Exceptions\UploadException;
 ```php
 // upload.php
 $upload = new Upload(new LocalAdapter(
-    ['dir' => __DIR__ . '/uploads/', 'url' => 'https://example.com/uploads/'],
+    [
+        'dir' => '/var/app/storage/uploads/',     // outside the web root
+        'url' => 'https://example.com/uploads/',  // served read-only, scripts never executed
+    ],
     [
         'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
         'allowed_mime_types' => ['image/jpeg', 'image/png', 'image/webp'],
@@ -37,15 +40,19 @@ if ($files === []) {
 }
 
 try {
+    // Never store under the client's file name: generate one (the extension is kept).
+    $files[0]->rename(bin2hex(random_bytes(16)));
+
     $stored = $upload->setFile($files[0])->to();
     if ($stored === false) {
         http_response_code(500);
         exit('Could not store the file.');
     }
-    echo 'Stored at ' . $stored->getURL();
+    // The URL is derived from the stored name; escape it anyway when it goes into HTML.
+    echo 'Stored at ' . htmlspecialchars((string) $stored->getURL(), ENT_QUOTES, 'UTF-8');
 } catch (UploadException $e) {
     http_response_code(422);
-    echo $e->getMessage();
+    echo htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
 }
 ```
 
@@ -57,6 +64,8 @@ header('Content-Type: application/json');
 $results = [];
 foreach (File::setPost('gallery') as $file) {
     try {
+        $file->rename(bin2hex(random_bytes(16))); // never use the client's file name
+
         $stored = $upload->setFile($file)->to('gallery/' . date('Y/m'));
         $results[] = $stored === false
             ? ['name' => $file->getName(), 'ok' => false, 'error' => 'write failed']
@@ -101,7 +110,7 @@ $file->rename(strtolower(trim($slug, '-')) . '-' . substr(bin2hex(random_bytes(4
 $file = File::setPost('avatar')[0] ?? null;
 
 if ($file !== null) {
-    $file->rename('avatar'); // avatar.<ext>
+    $file->rename('avatar'); // avatar.<ext>; $userId must be the authenticated user's id, never request input
     $stored = $upload->setFile($file)->to('users/' . $userId);
     // stored at <dir>/users/<id>/avatar.<ext>
     $user->avatar_url = $stored !== false ? $stored->getURL() : null;
@@ -145,7 +154,11 @@ Because every adapter shares one interface, only construction differs.
 use InitPHP\Upload\Adapters\FTPAdapter;
 use InitPHP\Upload\Adapters\S3Adapter;
 
-$options = ['allowed_extensions' => ['jpg', 'png'], 'allowed_max_size' => 2_000_000];
+$options = [
+    'allowed_extensions' => ['jpg', 'png'],
+    'allowed_mime_types' => ['image/jpeg', 'image/png'],
+    'allowed_max_size'   => 2_000_000,
+];
 
 $adapter = match (getenv('UPLOAD_DRIVER') ?: 'local') {
     's3'  => new S3Adapter([
@@ -161,8 +174,8 @@ $adapter = match (getenv('UPLOAD_DRIVER') ?: 'local') {
         'url'      => getenv('FTP_PUBLIC_URL'),
     ], $options),
     default => new LocalAdapter([
-        'dir' => __DIR__ . '/uploads/',
-        'url' => getenv('APP_URL') . '/uploads/',
+        'dir' => '/var/app/storage/uploads/',      // outside the web root
+        'url' => getenv('APP_URL') . '/uploads/',  // served read-only, scripts never executed
     ], $options),
 };
 
@@ -196,13 +209,18 @@ if ($files === []) {
 ## Validate a file before deciding what to do with it
 
 ```php
+// $upload is built with 'allowed_extensions' => ['pdf'] and
+// 'allowed_mime_types' => ['application/pdf'].
 $file = File::setPost('doc')[0] ?? null;
 
 if ($file !== null && $file->isValid()) {
     if ($file->getRealMimeType() === 'application/pdf') {
+        $file->rename(bin2hex(random_bytes(16)));
         $upload->setFile($file)->to('pdfs');
     } else {
-        $upload->setFile($file)->to('other');
+        // Do not fall back to "store it somewhere else": reject what you do not expect.
+        http_response_code(422);
+        exit('Only PDF files are accepted.');
     }
 }
 ```

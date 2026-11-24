@@ -18,7 +18,7 @@ single-file `name="photo"` field.
 ## 2. Build an adapter
 
 An **adapter** knows *where* files go (`credentials`) and *what* is allowed
-(`options`, optional):
+(`options` — optional in the API, but always set them for user uploads):
 
 ```php
 <?php
@@ -29,15 +29,19 @@ use InitPHP\Upload\Upload;
 use InitPHP\Upload\File;
 use InitPHP\Upload\Adapters\LocalAdapter;
 
+// options — what is allowed. With none set, every extension and type is accepted.
+$options = [
+    'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
+    'allowed_mime_types' => ['image/jpeg', 'image/png', 'image/webp'], // real type, via finfo
+    'allowed_max_size'   => 2 * 1024 * 1024, // 2 MB, in bytes
+];
+
 $adapter = new LocalAdapter(
     [   // credentials — where files go
-        'dir' => __DIR__ . '/uploads/',
-        'url' => 'https://example.com/uploads/',
+        'dir' => '/var/app/storage/uploads/',      // outside the web root
+        'url' => 'https://example.com/uploads/',   // served read-only, scripts never executed
     ],
-    [   // options — what is allowed (optional)
-        'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
-        'allowed_max_size'   => 2 * 1024 * 1024, // 2 MB, in bytes
-    ]
+    $options
 );
 
 $upload = new Upload($adapter);
@@ -62,6 +66,9 @@ $results = [];
 
 foreach (File::setPost('photos') as $file) {
     try {
+        // Never store under the client's file name: generate one (the extension is kept).
+        $file->rename(bin2hex(random_bytes(16)));
+
         $stored = $upload->setFile($file)->to();
 
         if ($stored === false) {
@@ -89,6 +96,7 @@ thrown as an [`UploadException`](Error-Handling.md), not returned as `false`.
 The optional `$target` is a destination path/key prefix:
 
 ```php
+$file->rename(bin2hex(random_bytes(16))); // as in step 4
 $upload->setFile($file)->to('2026/06');
 // stored at <dir>/2026/06/<name>
 // URL:      https://example.com/uploads/2026/06/<name>
@@ -99,7 +107,8 @@ every adapter — see [Core Concepts](Core-Concepts.md#4-target--the-destination
 
 ## 6. Switch the backend
 
-Only the adapter changes; steps 3–5 stay exactly the same.
+Only the adapter changes; steps 3–5 stay exactly the same — including the
+`$options` from step 2, which you pass as the second argument:
 
 ```php
 use InitPHP\Upload\Adapters\FTPAdapter;
@@ -107,9 +116,9 @@ use InitPHP\Upload\Adapters\FTPAdapter;
 $upload = new Upload(new FTPAdapter([
     'host'     => 'ftp.example.com',
     'username' => 'user',
-    'password' => 'secret',
+    'password' => getenv('FTP_PASSWORD'),
     'url'      => 'https://cdn.example.com/',
-]));
+], $options)); // the same allow-lists and size limit as above
 ```
 
 ## What just happened

@@ -31,7 +31,11 @@ $adapter = new FTPAdapter(
         'passive'  => true,
     ],
     [
-        'allowed_max_size' => 10 * 1024 * 1024,
+        // With no allow-list, every extension is accepted and the file lands in
+        // the publicly served `url` tree. Always restrict what can be stored.
+        'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
+        'allowed_mime_types' => ['image/jpeg', 'image/png', 'image/webp'], // real type, via finfo
+        'allowed_max_size'   => 10 * 1024 * 1024,
     ]
 );
 
@@ -42,10 +46,12 @@ $upload = new Upload($adapter);
 
 ```php
 foreach (File::setPost('photos') as $file) {
+    $file->rename(bin2hex(random_bytes(16))); // never use the client's file name
+
     $stored = $upload->setFile($file)->to('gallery');
 
     if ($stored !== false) {
-        echo $stored->getURL(); // https://cdn.example.com/gallery/<name>
+        echo htmlspecialchars((string) $stored->getURL(), ENT_QUOTES, 'UTF-8'); // https://cdn.example.com/gallery/<32hex>.jpg
     }
 }
 ```
@@ -79,6 +85,12 @@ $adapter = new FTPAdapter([
     'url'      => 'https://cdn.example.com/',
     'ssl'      => true,   // explicit FTPS
     'passive'  => true,
+], [
+    // FTPS protects the transfer, not the content: without an allow-list every
+    // extension is accepted. Use the same options as in the example above.
+    'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
+    'allowed_mime_types' => ['image/jpeg', 'image/png', 'image/webp'],
+    'allowed_max_size'   => 10 * 1024 * 1024,
 ]);
 ```
 

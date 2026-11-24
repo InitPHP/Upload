@@ -17,18 +17,21 @@ use InitPHP\Upload\File;
 use InitPHP\Upload\Adapters\LocalAdapter;
 
 $upload = new Upload(new LocalAdapter([
-    'dir' => __DIR__ . '/uploads/',
-    'url' => 'https://example.com/uploads/',
+    'dir' => '/var/app/storage/uploads/',        // outside the web root
+    'url' => 'https://example.com/uploads/',     // served read-only, scripts never executed
 ], [
     'allowed_extensions' => ['jpg', 'png', 'webp'],
+    'allowed_mime_types' => ['image/jpeg', 'image/png', 'image/webp'], // real type, via finfo
     'allowed_max_size'   => 2 * 1024 * 1024, // 2 MB
 ]));
 
 foreach (File::setPost('photos') as $file) {
+    $file->rename(bin2hex(random_bytes(16))); // never keep the client's file name
+
     $stored = $upload->setFile($file)->to();
 
     if ($stored !== false) {
-        echo $stored->getURL(); // https://example.com/uploads/<name>
+        echo htmlspecialchars((string) $stored->getURL(), ENT_QUOTES, 'UTF-8'); // https://example.com/uploads/<32hex>.jpg
     }
 }
 ```

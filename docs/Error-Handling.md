@@ -72,7 +72,7 @@ use InitPHP\Upload\Adapters\FTPAdapter;
 use InitPHP\Upload\Exceptions\UnsupportedException;
 
 try {
-    $adapter = new FTPAdapter($credentials);
+    $adapter = new FTPAdapter($credentials, $options); // $options: your allow-lists, see Validation
 } catch (UnsupportedException $e) {
     // ext-ftp is not installed: "FTP adapter cannot be used on your server."
 }
