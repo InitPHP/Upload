@@ -85,6 +85,12 @@ $adapter = new FTPAdapter([
     'url'      => 'https://cdn.example.com/',
     'ssl'      => true,   // explicit FTPS
     'passive'  => true,
+], [
+    // FTPS protects the transfer, not the content: without an allow-list every
+    // extension is accepted. Use the same options as in the example above.
+    'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
+    'allowed_mime_types' => ['image/jpeg', 'image/png', 'image/webp'],
+    'allowed_max_size'   => 10 * 1024 * 1024,
 ]);
 ```
 
