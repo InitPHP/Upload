@@ -4,6 +4,17 @@ All notable changes to `initphp/upload` are documented here. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.1] - 2026-11-25
+
+### Documentation
+
+- The upload examples (README, Home, Quick Start, Local, FTP and S3 adapters,
+  Recipes, Error Handling) are safe to copy: an allow-list of extensions and real
+  MIME types, a `rename()` to a server-generated name, a `dir` outside the web
+  root, and escaping of URLs and messages printed into HTML. The FTP examples read
+  the password from the environment and pass the same options.
+- The README states that with no options every extension and type is accepted.
+
 ## [3.0.0] - 2026-11-22
 
 ### Changed
