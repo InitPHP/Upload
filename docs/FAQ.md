@@ -72,7 +72,7 @@ are better served by building the `Aws\S3\S3Client` yourself. See
 
 ### Which PHP versions are supported?
 
-PHP **8.2 and newer**. CI runs the test suite on 8.2–8.5.
+PHP **8.2 and newer**. CI runs the test suite on 8.2–8.6.
 
 ### Is it framework-specific?
 
